@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 //import androidx.compose.ui.Modifier
@@ -50,22 +52,26 @@ class MainActivity : ComponentActivity() {
         setContent {
             PokemonTheme {
                 var pokemons by remember { mutableStateOf<List<Pokemon>>(emptyList()) }
+                var isLoading by remember { mutableStateOf(false) }
 
                 LaunchedEffect(Unit) {
                     val result = fetchPokemonData("https://moke-battle-log.web.app/poke-ja.json")
                     if (result != null) {
                         pokemons = result.pokemons
                     }
+                    isLoading = true;
                 }
-                PokemonList(pokemons)
+
+                if(isLoading){
+                    PokemonList(pokemons)
+                }else{
+                    LoadingIndicator()
+                }
             }
         }
     }
 
     // JSON取得処理
-//    public final suspend fun fetchPokemonData(
-//        url: String
-//    ): PokemonData?
     private suspend fun fetchPokemonData(url: String): PokemonData? = withContext(Dispatchers.IO) {
         var connection: HttpURLConnection? = null
 
@@ -128,6 +134,16 @@ fun PokemonItem(pokemon: Pokemon){
         )
     }
     Divider()
+}
+
+@Composable
+fun LoadingIndicator(){
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier.fillMaxSize()
+    ){
+        CircularProgressIndicator()
+    }
 }
 
 @Preview(showBackground = true)
