@@ -51,21 +51,31 @@ class MainActivity : ComponentActivity() {
 //        }
         setContent {
             PokemonTheme {
+                // ポケモンデータ
                 var pokemons by remember { mutableStateOf<List<Pokemon>>(emptyList()) }
-                var isLoading by remember { mutableStateOf(false) }
+                // 読み込みステータス
+                var isLoading by remember { mutableStateOf(true) }
+                var isError by remember { mutableStateOf(false) }
 
                 LaunchedEffect(Unit) {
                     val result = fetchPokemonData("https://moke-battle-log.web.app/poke-ja.json")
+
                     if (result != null) {
                         pokemons = result.pokemons
+                    }else{
+                        isError = true
                     }
-                    isLoading = true;
+                    // ローディング終了
+                    isLoading = false;
                 }
 
+                // isLoadingの状態による表示の切り替え
                 if(isLoading){
-                    PokemonList(pokemons)
-                }else{
                     LoadingIndicator()
+                }else if(isError){
+                    ErrorLoading()
+                }else{
+                    PokemonList(pokemons)
                 }
             }
         }
@@ -103,11 +113,12 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+// リスト全体
 @Composable
 fun PokemonList(pokemons: List<Pokemon>) {
     LazyColumn(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxSize() // 縦幅を画面いっぱいに
     ) {
         items(pokemons){
                 pokemon -> PokemonItem(pokemon=pokemon)
@@ -115,6 +126,7 @@ fun PokemonList(pokemons: List<Pokemon>) {
     }
 }
 
+// リストの項目
 @SuppressLint("DefaultLocale")
 @Composable
 fun PokemonItem(pokemon: Pokemon){
@@ -124,7 +136,7 @@ fun PokemonItem(pokemon: Pokemon){
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = "#${String.format("%04d", pokemon.id)}",
+            text = "#${String.format("%04d", pokemon.id)}", // 0埋め4桁表示
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.width(16.dp))
@@ -133,9 +145,10 @@ fun PokemonItem(pokemon: Pokemon){
             textAlign = TextAlign.Center
         )
     }
-    Divider()
+    Divider() // 線は横並びにしないので外
 }
 
+// 読込中表示
 @Composable
 fun LoadingIndicator(){
     Box(
@@ -143,6 +156,17 @@ fun LoadingIndicator(){
         modifier = Modifier.fillMaxSize()
     ){
         CircularProgressIndicator()
+    }
+}
+
+// エラー時の表示
+@Composable
+fun ErrorLoading(){
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier.fillMaxSize()
+    ){
+       Text("読み込みに失敗しました")
     }
 }
 
