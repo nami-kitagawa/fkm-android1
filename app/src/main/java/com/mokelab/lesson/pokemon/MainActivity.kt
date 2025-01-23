@@ -50,7 +50,7 @@ class MainActivity : ComponentActivity() {
                         isError = true
                     }
                     // ローディング終了
-                    isLoading = false;
+                    isLoading = false
                 }
 
                 // isLoadingの状態による表示の切り替え
