@@ -5,11 +5,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,38 +15,24 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
-//import androidx.compose.ui.Modifier
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.google.gson.Gson
 import com.mokelab.lesson.pokemon.network.Pokemon
 import com.mokelab.lesson.pokemon.network.PokemonData
 import com.mokelab.lesson.pokemon.ui.theme.PokemonTheme
 import kotlinx.coroutines.*
-import java.io.BufferedReader
-import java.io.InputStreamReader
-//import java.lang.reflect.Modifier
-//import com.google.gson.Gson;
 import java.net.HttpURLConnection
 import java.net.URL
 
 class MainActivity : ComponentActivity() {
-    @OptIn(DelicateCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        GlobalScope.launch(Dispatchers.Main) {
-//            // 結果をUIスレッドで更新
-//            try {
-//            } catch (e: Exception) {
-//                // エラーハンドリング
-//                println("エラー: ${e.message}")
-//            }
-//        }
+
         setContent {
             PokemonTheme {
                 // ポケモンデータ
